@@ -44,7 +44,15 @@ Für Leute die wissen, was sie machen einfach requirments installieren, config-d
     `pip install beautifulsoup4 configparser regex selenium pandas python-telegram-bot`
 
 ## Wichtig 
-Ich habe das Ganze jetzt noch schnell hochgeladen, damit vielleicht auch andere Leute während meiner Klausurenzeit an dem Projekt arbeiten können. Der Großteil des Textes für das Readme wurde von ChatGPT generiert und kann somit Fehler enthalten.
+Ich habe das Ganze jetzt noch schnell hochgeladen, damit vielleicht auch andere Leute während meiner Klausurenzeit an dem Projekt arbeiten können. Der Großteil des Textes für das Readme wurde von ChatGPT generiert und kann somit Fehler enthalten. Hier noch ein kurzer Auschnitt aus meinem letzten Post im Cannabis-Medic Forum, welcher ausgeblendet wurde:
+"Ich habe dort auch einen Ordner toMatch hochgeladen, dort ist eine Excel-Datei matchnames enthalten.
+
+Diese stellt eine Art Namensregister da, welche die Namen der Strains, bei den jeweiligen Apotheken einer ID zuordnet. Dies muss gemacht werden, da sich die Namen bei den Apotheken auf der Website für die selbe Strain oft unterscheiden und ich keine Lust/Zeit/das können habe das ganze über pattern oder der gleichen zu matchen.
+Im selben Ordner finden sich auch zwei Dateien Cannflosalle und 420Brokkolialle, welche jeweils alle Strain-Namen auf der jeweiligen website enthalten.
+
+Diese müsste man eben noch in der matchnames-Datei immer einer ID zuordnen, dass der Bot richtig funktioniert.
+
+Eine genaue Installations-Anleitung usw. mache ich wahrscheinlich nach meinen Klausuren, vielleicht hat bis dahin ja noch jemand Lust weiter an dem Projekt zu arbeiten."
 ## Haftungsausschluss
 
 Dieser Telegramm-Bot ist ein Tool zur Unterstützung von Patienten bei der Suche nach den besten Preisen für medizinisches Cannabis und gibt keine medizinischen Ratschläge oder Empfehlungen ab. Der Bot wurde unabhängig von den betreffenden Apotheken entwickelt und soll keinerlei Werbung für diese Apotheken darstellen. Der Bot ist auch keine Art von Werbung für medizinisches Cannabis und soll lediglich als Hilfe-Tool für Patienten dienen, die bereits eine medizinische Verordnung für Cannabis besitzen.
