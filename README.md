@@ -20,7 +20,7 @@ Die folgenden Befehle sind nur für Admins zugänglich:
 
 
 ## Technische Details
-Der Bot wurde mithilfe der Bibliothek python-telegram-bot entwickelt. Dieser nutzt dabei Selenium in Kombination mit beatifulsoup, um die daten von den Webseiten der Apotheken zu verarbeiten.
+Der Bot wurde mithilfe der Bibliothek python-telegram-bot entwickelt. Dieser nutzt dabei Selenium mit dem chromedriver in Kombination mit beatifulsoup, um die daten von den Webseiten der Apotheken zu verarbeiten.
 ### Aktuell unterstützte Apotheken
 [Helios-Apotheke](https://helios-cannabis.de/)
 [Grünhorn-Apotheke](https://www.gruenhorn.de/)
