@@ -1,7 +1,4 @@
 # CannabisPreiseVergleich
-Ein Telegramm-Bot um die unterschiedlichen Preise der unterschiedlichen Cannabis-Apotheken zu vergleichen.
-
-
 Dieser Telegramm-Bot wurde entwickelt, um Patienten bei der Suche nach den besten Preisen für medizinisches Cannabis in verschiedenen Apotheken zu unterstützen. Der Bot ermöglicht es Patienten, die Preise für medizinisches Cannabis in den verschiedenen Online-Apotheken zu vergleichen und das beste Angebot zu finden. Das Projekt hat ursprünglich als Spaß-Projekt zur Semestervorbereitung und als Übung in Python gestartet. Ich habe es dann aufgrund des großen Interesses im [Cannabis-Medic-Forum](https://www.cannabis-medic.eu/forum/index.php?thread/825-telegramm-bot-zum-anzeigen-der-preise/) weiter ausgebaut.
 ## Verwendung
 
