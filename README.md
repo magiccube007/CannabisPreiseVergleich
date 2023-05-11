@@ -18,7 +18,7 @@ Dieses Projekt bietet die folgenden Befehle:
 Die folgenden Befehle sind nur für Admins zugänglich:
 
 - `/updatePrices`: Updated die Datenbank mit den Preisen
-- `/addUser`: Fügt einen neuen User hinzu
+- `/addUser "telegramm_user_id"`: Fügt einen neuen User hinzu
 
 
 ## Technische Details
