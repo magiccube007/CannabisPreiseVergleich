@@ -25,12 +25,19 @@ Die folgenden Befehle sind nur für Admins zugänglich:
 Der Bot wurde mithilfe der Bibliothek python-telegram-bot entwickelt. Dieser nutzt dabei Selenium mit dem chromedriver in Kombination mit beatifulsoup, um die daten von den Webseiten der Apotheken zu verarbeiten.
 ### Aktuell unterstützte Apotheken
 [Helios-Apotheke](https://helios-cannabis.de/)
+
 [Grünhorn-Apotheke](https://www.gruenhorn.de/)
+
 [Abc-Apotheke](https://abc-cannabis.de/)
+
 [420Brokkoli-Apotheke](https://420brokkoli.de/)
+
 [Cannflos-Apotheke](https://cannflos-apo.de/)
+
 [GrüneBlüte-Apotheke](https://gruenebluete.de/)
+
 [Cannabisapo24-Apotheke](https://cannabisapo24.de/)
+
 Weitere können gerne Angefragt werden. Hierbei ist nur wichtig, dass es eine Seite zum abrufen der Preise gibt, auf welcher diese in € pro Gramm angezeigt werden.
 ## Installation
 ### Mit Docker (empfohlen):
