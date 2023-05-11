@@ -1,0 +1,6 @@
+beautifulsoup4
+configparser
+regex
+selenium
+pandas
+python-telegram-bot
