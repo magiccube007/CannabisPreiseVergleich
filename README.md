@@ -49,7 +49,7 @@ Die Anleitung wurde lediglich unter Windows 10 getestet, sollte aber bei anderen
 Hierbei ist wichtig, dass ihr den Chrome-Path leer lasst. 
 Unter Telegram müsst ihr ADMIN_ID, TOKEN und BOT_USERNAME ausfüllen. Wie ihr den Token und Username (der, der mit Bot enden muss) bekommt, seht ihr [hier](https://www.siteguarding.com/en/how-to-get-telegram-bot-api-token).
 Wie ihr die Admin-Id bekommt, seht ihr [hier](https://cobrasystems.nl/telegram-user-id/).
-5.  Nachdem ihr, die config-Datei gespeichert habt, müsst ihr nur noch auf die Batch-Datein 'Install' doppelklicken. Sobald diese fertig ist (kann eine weile dauern) und sich das Fenster wieder schließt, könnt ihr den Bot in Telegramm nach ca. 30sek benutzen. Um den Bot zu stoppen bzw. zu einem späteren Zeitpunkt wieder zu starten einfach auf die Batch-Datei 'start_stop' doppelklicken. Es empfiehlt sich, direkt die Datenbank mit `/updatePrices` zu aktualisieren (auch dies kann eine Weile dauern).
+5.  Nachdem ihr, die config-Datei gespeichert habt, müsst ihr nur noch auf die Batch-Datein 'Install' doppelklicken. Sobald diese fertig ist (kann eine weile dauern) und sich das Fenster wieder schließt, könnt ihr den Bot in Telegramm benutzen. Um den Bot zu stoppen bzw. zu einem späteren Zeitpunkt wieder zu starten einfach auf die Batch-Datei 'start_stop' doppelklicken. Es empfiehlt sich, direkt die Datenbank mit `/updatePrices` zu aktualisieren (auch dies kann eine Weile dauern).
 ### Ohne Docker:
 Hierauf werde ich erstmal nicht weiter eingehen. Kurz gefasst, ihr müsst in der config zusätzlich einen Path zum chromedriver setzten und die Requirments installieren. Anschließend einfach die 'telegrammbot' Python-Datei starten.
 
