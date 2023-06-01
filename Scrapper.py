@@ -84,17 +84,16 @@ class GruenhornApotheke(Apotheke):
 
     def getHTML(self):
         driver = self.getDriver()
-        driver.get(self.url_login)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        driver.find_element(By.XPATH, '//*[@id="tarteaucitronAccept"]').click()
-        driver.find_element(By.XPATH, '//*[@id="pwbox-3290"]').send_keys(GRUENHORN_PASSWORD)
-        element = driver.find_element(By.XPATH, '//*[@id="post-3290"]/div/form/p[2]/input')
-        driver.execute_script("arguments[0].click();", element)
-        time.sleep(1)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         driver.get(self.url_data)
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+        driver.find_element(By.XPATH, '/html/body/div[5]/div/div/div[2]/span[3]/button').click()
+        driver.find_element(By.XPATH, '//*[@id="gh_form_pw"]').send_keys(GRUENHORN_PASSWORD)
+        element = driver.find_element(By.XPATH, '/html/body/main/div[2]/div[2]/div/div[2]/div/div[2]/div/div/div/div/form/button')
+        driver.execute_script("arguments[0].click();", element)
+        time.sleep(5)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         response = driver.find_element(By.XPATH, '//html').get_attribute('outerHTML')
@@ -102,16 +101,20 @@ class GruenhornApotheke(Apotheke):
     
     def getItems(self, htlm):
         soup = BeautifulSoup(htlm, 'html.parser')
-        list_element = soup.find_all('article')
+        list_element = soup.find_all('div', {'class': 'cms-listing-col col-sm-6 col-lg-4 col-xl-3'})
         items = []
         for li in list_element:
-            name = li.find('div', {'class': 'lb-name'})
-            price = li.find('span', {'class': 'lb-preis'})
-            stock = li.find(string=re.compile('nicht'))
-            if not stock and name != None and price != None:
+            name = li.find('div', {'class': 'live-bestand-wert'})
+            straintype = li.find('span', {'class': 'price-unit-content'})
+            price = li.find('span', {'class': 'product-price'})
+            stock = li.find('div', {'class': 'live-bestand-wert available'})
+            if stock != None and name != None and price != None and straintype != None:
+                stock_name = stock.text.strip()
+                straintype_name = straintype.text.strip()
                 item_name = name.text.strip()
-                item_price = price.text.strip().replace('PREIS:', '').replace('€', '').replace('für 1 g', '').replace(',', '.').strip().replace(' für 1g', '')
-                items.append({'name': item_name, 'price': item_price})
+                item_price = price.text.strip().replace(',', '.').replace('€*', '').strip()
+                if not 'nicht' in stock_name and 'Gramm' in straintype_name and not 'Cannabis Extrakt' in item_name:
+                    items.append({'name': item_name, 'price': item_price})
         return items
 
 class AbcApotheke(Apotheke):
@@ -382,16 +385,16 @@ class Cannabisapo24Apotheke(Apotheke):
         driver.get(self.URL_LOGIN)
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        time.sleep(1)
+        time.sleep(5)
         driver.find_element(By.XPATH, '//*[@id="LoginCustomerEmail"]').send_keys(Cannabisapo24_EMAIL)
         driver.find_element(By.XPATH, '//*[@id="LoginCustomerPassword"]').send_keys(Cannabisapo24_PASSWORD)
         driver.find_element(By.XPATH, '//*[@id="customer_login"]/div[3]/label/input').click()
         driver.find_element(By.XPATH, '//*[@id="customer_login"]/div[4]/input').click()
-        time.sleep(1)
+        time.sleep(5)
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         driver.get(self.BESTAND_URL)
-        time.sleep(1)
+        time.sleep(5)
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -437,4 +440,3 @@ class Scrape():
     def updateAll(self):
         for apo in self.apotheken:
             apo.updateData()
-
