@@ -66,9 +66,8 @@ Hierauf werde ich erstmal nicht weiter eingehen. Kurz gefasst, ihr müsst in der
 ## Wichtig 
 Der Großteil des Textes für das Readme wurde von ChatGPT generiert und kann somit Fehler enthalten. 
 Außerdem ist gerade die Scrapper-Datei aufgrund von Selenium sehr ineffizient und fehleranfällig, falls jemand Zeit und Lust hast dies zu ändern immer gerne. Ich hab es nicht, da es meistens aus so funktioniert.
-### Was ist toMatch?
-In dem hochgeladenen Ordner namens "toMatch" befindet sich eine Excel-Datei namens "matchnames", die als eine Art Namensregister dient. Hier werden den verschiedenen Strain-Namen, die bei den jeweiligen Apotheken zu finden sind, eine eindeutige ID zugeordnet. Dies ist notwendig, da sich die Bezeichnungen bei den Apotheken oft unterscheiden und man diese sonst nicht richtig zuordnen kann.
-Im selben Ordner befinden sich auch weitere Dateien, die alle Strain-Namen der jeweiligen Apotheken enthalten. Um den Bot richtig funktionieren zu lassen, müssen diese Strain-Namen also noch in der "matchnames"-Datei den entsprechenden IDs zugeordnet werden.
+### Was ist "matchnames.csv"?
+Hier werden den verschiedenen Strain-Namen, die bei den jeweiligen Apotheken zu finden sind, eine eindeutige ID zugeordnet. Dies ist notwendig, da sich die Bezeichnungen bei den Apotheken oft unterscheiden und man diese sonst nicht richtig zuordnen kann.
 Sollte eine Strain noch nicht enthalten sein, kann man dieser am Ende der matchnames-Datei eine neue ID zuordnen. Wichtig hierbei ist, dass man die restlichen Spalten mit 'None' füllt.
 
 ## Haftungsausschluss
