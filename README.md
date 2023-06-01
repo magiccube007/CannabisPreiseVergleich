@@ -19,7 +19,7 @@ Die folgenden Befehle sind nur für Admins zugänglich:
 
 - `/updatePrices`: Updated die Datenbank mit den Preisen
 - `/addUser "telegramm_user_id"`: Fügt einen neuen User hinzu
-
+- `/getLeftToMatch`: Gibt die Namen der Strains zurück, welche noch nicht zugewiesen wurden
 
 ## Technische Details
 Der Bot wurde mithilfe der Bibliothek python-telegram-bot entwickelt. Dieser nutzt dabei Selenium mit dem chromedriver in Kombination mit beatifulsoup, um die daten von den Webseiten der Apotheken zu verarbeiten.
