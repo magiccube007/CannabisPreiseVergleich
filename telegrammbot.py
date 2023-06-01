@@ -37,7 +37,8 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if ADMIN_ID == str(update.message.from_user.id):
         result += '<b>Admin-Befehle:</b>\n'
         result += '/updatePrices: Updated die Datenbank mit den Preisen\n'
-        result += '/addUser: Fügt einen neuen User hinzu'
+        result += '/addUser: Fügt einen neuen User hinzu\n'
+        result += '/getLeftToMatch: Gibt die Namen der Strains zurück, welche noch nicht zugewiesen wurden!'
     await update.message.reply_text(result, parse_mode=constants.ParseMode.HTML)
 
 #Alle Nachrichten die kein Befehl sind
@@ -160,6 +161,10 @@ async def getLoaded(update: Update, context: ContextTypes.DEFAULT_TYPE):
     anzahl = app_price.getAmountInDatabase()
     await update.message.reply_text(anzahl, parse_mode=constants.ParseMode.HTML)
 
+async def getLeftToMatch(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    result = app_price.getLeftToMatch()
+    await sendMessage(update,result)
+
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {update} caused error {context.error}')
 
@@ -175,6 +180,7 @@ def main():
     app.add_handler(CommandHandler('getBestDeal', getBestDeal))
     app.add_handler(CommandHandler('addUser', addUser))
     app.add_handler(CommandHandler('getLoaded', getLoaded))
+    app.add_handler(CommandHandler('getLeftToMatch', getLeftToMatch))
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
     app.add_error_handler(error)
     print('Waiting 10seks for everything to setup')
