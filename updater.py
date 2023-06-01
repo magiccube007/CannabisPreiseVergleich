@@ -129,7 +129,26 @@ class App():
             name = apo['Apotheke']
             result += '<b>'+ str(name) +':</b> ' + str(amount) + ' Einträge\n'
         return result
+    #Gibt die Namen welche noch gematcht werden müssen pro Apotheke zurück
+    def getLeftToMatch(self):
+        result = ''
+        for apo in self.apotheken:
+            apo_df = apo['ApothekeObject'].df
+            if len(apo_df) != 0:
+                name = apo['Apotheke']
+                match_df = self.matches.df
+                missing_elements = apo_df[~apo_df.index.isin(match_df[name])].index.tolist()
+                if len(missing_elements) != 0:
+                    result += '<b>'+ str(name) +':</b>\n\n'
+                    for e in sorted(missing_elements):
+                        result += str(e) +'\n'
+                    result += '\n'
+        if result == '':
+            return '<b>Currently all Strains are matched!</b>'
+        return result
 
+
+        return result
     #holt für einen Index die Preise aus allen Apotheken und speichert diese in einem Objekt
     def getPriceForIndex(self, index):
         item_names = self.matches.getIndex(index)
@@ -251,3 +270,4 @@ class App():
         new_row = {'user_id': user_id}
         df = df._append(new_row, ignore_index=True)
         df.to_csv('allowedusers.csv', index=False)
+
