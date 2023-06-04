@@ -91,7 +91,7 @@ ID,GruenhornApotheke,AbcApotheke,HeliosApotheke,420BrokkoliApotheke,CannflosApot
 90,Pedanios 22/1 DNK: Ghost Train Haze,Pedanios 22/1,Pedanios 22/1 DNK – Ghost Train Haze,Pedanios 22/1 DNK,Pedanios 22/1 DNK,Aurora Pedanios 22/1 DNK (Ghost Train Haze),Pedanios 22/1 DNK
 91,Pedanios 27/1 FRG-CA: Farm Gas,Pedanios 27/1 FRG-CA,Pedanios 27/1 FRG – CA FARM GAS,Pedanios 27/1 FRG-CA,Pedanios 27/1 FRG-CA,Pedanios 27/1 FRG-CA (Farm Gas),Pedanios 27/1 FRG-CA
 92,Pedanios 29/1 SRD-CA: Sourdough,Pedanios 29/1 SRD-CA,Pedanios 29/1 SRD – CA SOURDOUGH,Pedanios 29/1 SRD-CA,Pedanios 29/1 SRD-CA,Pedanios 29/1 SRD-CA (Sourdough),Pedanios 29/1 SRD-CA
-93,RUA Kia Kaha 26/1: OG Kush x Wedding Cake,None,None,None,Kia Kaha 26/1,Kia Kaha 26/1 (Kia Kaha),RUA KIA KAHA 26/1
+93,RUA Kia Kaha 26/1: OG Kush x Wedding Cake,None,None,Rua Kia Kaha 26/1,Kia Kaha 26/1,Kia Kaha 26/1 (Kia Kaha),RUA KIA KAHA 26/1
 94,RUA Kia Kaha 29/1: OG Kush x Wedding Cake,None,None,Rua Kia Kaha 29/1,Kia Kaha 29/1,Kia Kaha 29/1 (Kia Kaha),RUA KIA KAHA 29/1
 95,Remexian 25/1: Frosted Lemon Cake,None,Remexian 25/1 – Frosted Lemon Cake,Remexian 25/1,None,None,Remexian 25/1
 96,Remexian 25/1: GAC,None,None,Remexian 25/1 GAC,Remexian 25/1 GAC,None,Remexian 25/1 GAC
@@ -157,7 +157,7 @@ ID,GruenhornApotheke,AbcApotheke,HeliosApotheke,420BrokkoliApotheke,CannflosApot
 156,Cannamedical Sativa forte MA: Ghost Train Haze,None,None,None,Cannamedical Sativa forte MA,None,None
 157,DEMECAN 24:01 Tricolo,None,Demecan 24:01 Tricolo – LA Kush Cake,Demecan 24:01 Tricolo,None,Demecan 24:01 Tricolo (LA Kush Cake),None
 158,Drapalin 10/11 Batha Balanced,None,Drapalin 10/11 Batha Balanced – Bafokeng Choice x Granddaddy Purple,Drapalin 10/11 Batha Balanced,Drapalin 10/11 Batha Balance,Drapalin 10/11 Batha Balanced (Batha Balanced),None
-159,IMC THC 21 T01: Hindu Kush,None,IMC 22/1 T01 – Hindu Kush,IMC THC22 T01,None,Cannabis Flos 22/1 IMC T01 (Hindu Kush),IMC THC22 T01
+159,IMC THC 21 T01: Hindu Kush,IMC THC22 T01,IMC 22/1 T01 – Hindu Kush,IMC THC22 T01,None,Cannabis Flos 22/1 IMC T01 (Hindu Kush),IMC THC22 T01
 160,IMC T03,None,IMC 20/1 T03 – Gorilla Glue,IMC T03,None,None,None
 161,IQANNA No.10,None,Iqanna No.10 – Wappa,IQANNA No.10,None,None,None
 162,Khiron 1/14,None,Khiron 1/14 – Godbud,None,None,None,None
@@ -217,18 +217,18 @@ ID,GruenhornApotheke,AbcApotheke,HeliosApotheke,420BrokkoliApotheke,CannflosApot
 216,CM 24/1 LLY: Legendary Larry,None,None,None,None,None,None
 217,420 Evolution 27/1 CA: WES,None,None,420 Evolution 27/1 CA WES,None,420 Evolution 27/1 CA WES,420 Evolution 27/1 CA WES
 218,Cannamedical Indica Ultra: Crazy Rntz,None,None,None,None,None,Cannamedical Indica ultra
-219,MAC 2+: Black Garlic,None,None,None,MAC 2+,None,None
+219,MAC 2+: Black Garlic,MAC 2+,None,None,MAC 2+,None,Cantourage Mac 2+
 220,BG MI: God Bud,BG MI,None,BG MI,BG MI,None,BG MI - God Bud
 221,Tilray THC 22 Spotlight Porto: Sour Diesel,None,None,THC22 Spotlight Porto: Sour Diesel,None,None,Tilray THC22 Spotlight Porto - Sour Diesel
-222,Avaay 26/1 GLX: Galaxy,None,None,None,None,None,AVAAY 26/1 GLX - Galaxy
+222,Avaay 26/1 GLX: Galaxy,None,None,AVAAY 26/1 Galaxy,None,None,AVAAY 26/1 GLX - Galaxy
 223,C&C Cannabis 23/1: Frosted Lemon Angel,None,None,None,None,None,None
 224,CannabiStada GAB 30: Garlic Breath,None,None,None,Cannabistada 30/1,None,None
-225,Avaay 22/1 BCP: Black Cherry Punch,None,None,None,Avaay 22/1 BCP,AVAAY 22/1 BCP (Black Cherry Punch),None
-226,Cannamedical Hybrid Forte: Gorilla Mints,None,None,None,Cannamedical Hybrid Forte GM,None,None
+225,Avaay 22/1 BCP: Black Cherry Punch,None,None,AVAAY 22/1 Black Cherry Punch,Avaay 22/1 BCP,AVAAY 22/1 BCP (Black Cherry Punch),AVAAY 22/1 BCP - Black Cherry Punch
+226,Cannamedical Hybrid Forte: Gorilla Mints,None,None,None,Cannamedical Hybrid Forte,None,None
 227,Pure Sunfarms 20/1: Pink Kush,None,None,None,Pure Sunfarm 20/1,Pure Sunfarms 20/1 (Pink Kush),Pure Sunfarms 20/1
 228,Remexian 22/1: APX,None,None,None,Remexian 22/1 APX,None,Remexian 22/1 APX
-229,Beacon I-Hybrid THC 22: Wappa,None,None,None,None,None,None
-230,Grow 18 HF Mac: Hellfire,None,None,None,None,None,GROW 18 HF Mac
+229,Beacon I-Hybrid THC 22: Wappa,None,None,None,None,None,Beacon I-Hybrid THC22 Wappa
+230,Grow 18 HF Mac: Hellfire,None,None,GROW 18 HF Mac,None,None,GROW 18 HF Mac
 231,MediproCan Smarargd 22/1: La SAGE T22,None,None,None,None,None,mediprocan Smaragd 22/1
 232,Remexian 20/1: Nordle,None,None,None,Remexian 20/1,None,Remexian 20/1 - Nordle
 233,None,None,None,None,None,None,Remexian 22/1
@@ -248,4 +248,6 @@ ID,GruenhornApotheke,AbcApotheke,HeliosApotheke,420BrokkoliApotheke,CannflosApot
 247,Grünhorn GG 22/1: GG,None,None,None,None,None,None
 248,Grünhorn MC 25/1: MAC 1,None,None,None,None,None,None
 249,None,None,None,None,None,Tilray THC22 Spotlight Porto (Master Kush),None
-250,None,None,None,None,None,None,Demecan Craft Black Triangle 27:01
+250,Demecan CRAFT Black Triangle  27:01,None,None,Demecan CRAFT Black Triangle 27:01,None,None,Demecan Craft Black Triangle 27:01
+251,None,None,None,None,None,None,CanPharma Flos SK 24/1
+252,None,None,None,None,None,None,Nimbus ZRP 26/1
