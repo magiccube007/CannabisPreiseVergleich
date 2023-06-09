@@ -1,38 +1,19 @@
 from bs4 import BeautifulSoup
 from configparser import ConfigParser
 import re
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, ElementNotInteractableException, NoSuchElementException
-import time
 import pandas as pd
 import abc
 import os
+import requests
 
 config = ConfigParser()
 config.read('config.ini')
 
-HELIOSAPOTHEKE_USERNAME = config['HELIOSAPOTHEKE']['USERNAME']
-HELIOSAPOTHEKE_PASSWORD = config['HELIOSAPOTHEKE']['PASSWORT']
-ABCAPOTHEKE_USERNAME = config['ABCAPOTHEKE']['USERNAME']
-ABCAPOTHEKE_PASSWORD = config['ABCAPOTHEKE']['PASSWORT']
-BROKKOLI_PASSWORD = config['BROKKOLIAPOTHEKE']['PASSWORT']
-GRUENHORN_PASSWORD = config['GRUENHORNAPOTHEKE']['PASSWORT']
-CANFLOS_PASSWORD = config['CANFLOSAPOTHEKE']['PASSWORT']
-CHROME_PATH = config['CHROME']['PATH']
-GRUENEBLUETE_PASSWORD = config['GRUENEBLUETEAPOTHEKE']['PASSWORT']
-Cannabisapo24_EMAIL = config['CANNABISAPO24APOTHEKE']['USERNAME']
-Cannabisapo24_PASSWORD = config['CANNABISAPO24APOTHEKE']['PASSWORT']
-
 class Apotheke(metaclass=abc.ABCMeta):
-    
     
     def __init__(self):
         self.NAME = 'ERROR'
         
-
     def updateData(self):
         if self.active == 'True':
             print('Updating', self.NAME, '...')
@@ -57,25 +38,10 @@ class Apotheke(metaclass=abc.ABCMeta):
         df = df.drop_duplicates()
         df.to_csv(os.path.join('data/',file_name), index=False)
     
-    def getDriver(self):
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--headless=new')
-        chrome_options.add_argument("--log-level=3")
-        chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument('--no-sandbox')
-        if CHROME_PATH == '':
-            driver = webdriver.Chrome(options=chrome_options)
-        else:
-            driver = webdriver.Chrome(executable_path=os.path.join(CHROME_PATH,'chromedriver.exe'),options=chrome_options)
-        driver.implicitly_wait(1)
-        return driver
 
 class GruenhornApotheke(Apotheke):
     
     url_login = "https://www.gruenhorn.de/preise/"
-    url_data = "https://www.gruenhorn.de/preise/?_form=blueten"
 
     def __init__(self):
         self.NAME = 'GruenhornApotheke.csv'
@@ -83,21 +49,9 @@ class GruenhornApotheke(Apotheke):
         
 
     def getHTML(self):
-        driver = self.getDriver()
-        driver.get(self.url_data)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        driver.find_element(By.XPATH, '/html/body/div[5]/div/div/div[2]/span[3]/button').click()
-        driver.find_element(By.XPATH, '//*[@id="gh_form_pw"]').send_keys(GRUENHORN_PASSWORD)
-        element = driver.find_element(By.XPATH, '/html/body/main/div[2]/div[2]/div/div[2]/div/div[2]/div/div/div/div/form/button')
-        driver.execute_script("arguments[0].click();", element)
-        time.sleep(5)
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        response = driver.find_element(By.XPATH, '//html').get_attribute('outerHTML')
-        return response
+        response = requests.get(self.url_login)
+        response.raise_for_status()
+        return response.content
     
     def getItems(self, htlm):
         soup = BeautifulSoup(htlm, 'html.parser')
@@ -121,29 +75,30 @@ class AbcApotheke(Apotheke):
 
     url_login = "https://abc-cannabis.de/my-account"
     url_data = "https://abc-cannabis.de/livebestand"
-    
+
+    ABCAPOTHEKE_USERNAME = config['ABCAPOTHEKE']['USERNAME']
+    ABCAPOTHEKE_PASSWORD = config['ABCAPOTHEKE']['PASSWORT']
+
     def __init__(self):
         self.NAME = 'AbcApotheke.csv'
         self.active = config['ABCAPOTHEKE']['ACTIVE']
 
     def getHTML(self):
-        driver = self.getDriver()
-        driver.get(self.url_login)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        driver.find_element(By.XPATH, '//*[@id="CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection"]').click()
-        driver.find_element(By.XPATH, '//*[@id="username"]').send_keys(ABCAPOTHEKE_USERNAME)
-        driver.find_element(By.XPATH, '//*[@id="password"]').send_keys(ABCAPOTHEKE_PASSWORD)
-        driver.find_element(By.XPATH, '//*[@id="post-9"]/div/div/div/div/div[1]/div/div/form/p[3]/button').click()
-        time.sleep(1)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        driver.get(self.url_data)
-        time.sleep(1)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        response_inventory = driver.find_element(By.XPATH, '//html').get_attribute('outerHTML')
-        return response_inventory
+
+        data = [
+            ('afurd_field_nonce', '300054e3e0'),
+            ('_wp_http_referer', '/my-account'),
+            ('pre_page', 'https://abc-cannabis.de/'),
+            ('username', self.ABCAPOTHEKE_USERNAME),
+            ('password', self.ABCAPOTHEKE_PASSWORD),
+            ('woocommerce-login-nonce', '49dd00f515'),
+            ('_wp_http_referer', '/my-account'),
+            ('login', 'Anmelden'),
+        ]
+        with requests.session() as s:
+            s.post(self.url_login, data=data)
+            response_inventory = s.get(self.url_data)
+        return response_inventory.content
     
     def getItems(self, htlm):
         soup = BeautifulSoup(htlm, 'html.parser')
@@ -169,30 +124,16 @@ class HeliosApotheke(Apotheke):
     
     url_login = "https://helios-cannabis.de/wp-login.php"
 
+    HELIOSAPOTHEKE_USERNAME = config['HELIOSAPOTHEKE']['USERNAME']
+    HELIOSAPOTHEKE_PASSWORD = config['HELIOSAPOTHEKE']['PASSWORT']
+
     def __init__(self):
         self.NAME = 'HeliosApotheke.csv'
         self.active = config['HELIOSAPOTHEKE']['ACTIVE']
     
     def getHTML(self):
-        driver = self.getDriver()
-        driver.get(self.url_login)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        driver.find_element(By.XPATH, '//*[@id="user_login"]').send_keys(HELIOSAPOTHEKE_USERNAME)
-        driver.find_element(By.XPATH, '//*[@id="user_pass"]').send_keys(HELIOSAPOTHEKE_PASSWORD)
-        driver.find_element(By.XPATH, '//*[@id="sso_default_login"]').click()
-        time.sleep(1)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        htmls = []
-        for i in range(1, 11):
-            url_sortiment = "https://helios-cannabis.de/sortiment/page/"+ str(i) +"?lieferbar=auf-lager,bald-verfuegbar"
-            driver.get(url_sortiment)
-            wait = WebDriverWait(driver, 10)
-            wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-            response_sortiment = driver.find_element(By.XPATH, '//html').get_attribute('outerHTML')
-            htmls.append(response_sortiment)
-        return htmls
+        html = ""
+        return html
     
     def getItems(self, htlm):
         items = []
@@ -208,24 +149,22 @@ class HeliosApotheke(Apotheke):
 class BrokkoliApotheke(Apotheke):
     
     URL_LOGIN = "https://live.420brokkoli.de/"
+    BROKKOLI_PASSWORD = config['BROKKOLIAPOTHEKE']['PASSWORT']
 
     def __init__(self):
         self.NAME = '420BrokkoliApotheke.csv'
         self.active = config['BROKKOLIAPOTHEKE']['ACTIVE']
     def getHTML(self):
-        driver = self.getDriver()
-        driver.get(self.URL_LOGIN)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        driver.find_element(By.XPATH, '//*[@id="Passwort"]').send_keys(BROKKOLI_PASSWORD)
-        driver.find_element(By.XPATH, '//*[@id="main-form-container"]/div/div/div[3]/button').click()
-        time.sleep(1)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        html = driver.find_element(By.XPATH, '//html').get_attribute('outerHTML')
-        return html
+        data = {
+            'Passwort': self.BROKKOLI_PASSWORD,
+            'email-confirm': '',
+        }
+        with requests.session() as s:
+            s.post(self.URL_LOGIN, data=data)
+            response = s.get(self.URL_LOGIN)
+        return response.content
     
-    def getItems(self, htlm):
+    def getItems(self, htlm): 
         soup = BeautifulSoup(htlm, 'html.parser')
         list_element = soup.find_all('tr')
         list_element.pop(0)
@@ -243,163 +182,100 @@ class BrokkoliApotheke(Apotheke):
         return items
 
 class CannflosApotheke(Apotheke):
-    URL_LOGIN = "https://cannflos-apo.de/preise/"
+
+    CANFLOS_PASSWORD = config['CANFLOSAPOTHEKE']['PASSWORT']
+    URL_LOGIN = "https://cannflos-apo.de/wp-login.php?action=postpass"
+    URL_PRICE = "https://cannflos-apo.de/preise/"
 
     def __init__(self):
         self.NAME = 'CannflosApotheke.csv'
         self.active = config['CANFLOSAPOTHEKE']['ACTIVE']
 
     def getHTML(self):
-        driver = self.getDriver()
-        driver.get(self.URL_LOGIN)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        time.sleep(1)
-        wait = WebDriverWait(driver, 10)
-        element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="wt-cli-accept-all-btn"]'))).click()
-        driver.find_element(By.XPATH, '//*[@id="pwbox-17321"]').send_keys(CANFLOS_PASSWORD)
-        driver.find_element(By.XPATH, '/html/body/form/p[2]/input').click()
-        time.sleep(1)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        time.sleep(1)
-        html = []
-        html.append(driver.find_element(By.XPATH, '//html').get_attribute('outerHTML'))
-        for i in range(5):
-            try:
-                nextPage = '#table_1_next'
-                element = driver.find_element(By.CSS_SELECTOR, nextPage)
-                driver.execute_script("arguments[0].scrollIntoView();", element)
-                time.sleep(1)
-                WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, nextPage))).click()
-                wait = WebDriverWait(driver, 10)
-                wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-                time.sleep(1)
-                html.append(driver.find_element(By.XPATH, '//html').get_attribute('outerHTML'))
-            except (TimeoutException, ElementNotInteractableException) as e:
-                print('Exception!')
-                if type(e) == TimeoutException:
-                    print('Cannflos-Apotheke:',"TimeoutException was raised")
-                elif type(e) == ElementNotInteractableException:
-                    print('Cannflos-Apotheke:',"ElementNotInteractableException was raised")
-                break
-        return list(set(html)) #remove duplicates
+        data = {
+            'post_password': self.CANFLOS_PASSWORD,
+            'Submit': 'Absenden',
+        }
+        
+        with requests.session() as s:
+            s.post(self.URL_LOGIN, data=data)
+            response = s.get(self.URL_PRICE)
+        return response.content
 
     def getItems(self, htlm):
         items = []
-        for h in htlm:
-            soup = BeautifulSoup(h, 'html.parser')
-            list_element = soup.find_all('tr')
-            list_element = list_element[3:]
-            for li in list_element:
-                stock = li.find('td', {'class': 'center column-bestand'})
-                name = li.find('td', {'class': 'expand column-name sorting_1'})
-                price = li.find('td', {'class': 'numdata float center column-preise'})
-                if stock != None and name != None and price != None:
-                    stock_str = stock.text.strip()
-                    name_str = name.text.strip()
-                    price_str = price.text.strip().replace(',', '.')
-                    if name_str != '' and price_str != '':
-                        if not stock_str.__contains__('nicht'):
-                            items.append({'name': name_str, 'price': price_str})
-                        
+        soup = BeautifulSoup(htlm, 'html.parser')
+        list_element = soup.find_all('tr', {'id': lambda value: value and 'table_16_row_' in value})
+        for li in list_element:
+            item_values = li.find_all('td', {'style': ''})
+            name = item_values[1].text.strip()
+            stock = item_values[9].text.strip()
+            price = item_values[11].text.strip().replace(',','.')
+            if not 'nicht' in stock:
+                items.append({'name': name, 'price': price})
+            
         return items
 
 class GrueneblueteApotheke(Apotheke):
-    URL_LOGIN = "https://gruenebluete.de/produkt-preisliste/"
+
+    GRUENEBLUETE_PASSWORD = config['GRUENEBLUETEAPOTHEKE']['PASSWORT']
+    URL_LOGIN = "https://gruenebluete.de/wp-login.php?action=postpass"
+    URL_LIST = "https://gruenebluete.de/produkt-preisliste/"
+
     def __init__(self):
         self.NAME = 'GrueneblueteApotheke.csv'
         self.active = config['GRUENEBLUETEAPOTHEKE']['ACTIVE']
     
     def getHTML(self):
-        driver = self.getDriver()
-        driver.get(self.URL_LOGIN)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        time.sleep(50)
-        element = driver.find_element(By.CSS_SELECTOR, '#usercentrics-root')
-        shadow_root = driver.execute_script('return arguments[0].shadowRoot', element)
-        try:
-            element = shadow_root.find_element(By.CSS_SELECTOR, 'button[data-testid="uc-accept-all-button"]')
-            element.click()
-        except NoSuchElementException:
-            print("GrueneBluete: Accept Cookies not found!")
-
-        driver.find_element(By.XPATH, '//*[@id="pwbox-836"]').send_keys(GRUENEBLUETE_PASSWORD)
-        send = driver.find_element(By.XPATH, '//*[@id="code_block-1366-838"]/div/div/div/div/div/form/div/input[2]')
-        driver.execute_script("arguments[0].click();", send)
-        time.sleep(1)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        time.sleep(1)
-        html = []
-        html.append(driver.find_element(By.XPATH, '//html').get_attribute('outerHTML'))
-
-        for i in range(6):
-            try:
-                time.sleep(1)
-                nextPage = 'a.paginate_button.next#table_1_next'
-                wait = WebDriverWait(driver, 10)
-                element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, nextPage)))
-                driver.execute_script("arguments[0].scrollIntoView();", element)
-                WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.CSS_SELECTOR, nextPage)))
-                driver.execute_script("arguments[0].click();", element)
-                time.sleep(1)
-                wait = WebDriverWait(driver, 10)
-                wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-                html.append(driver.find_element(By.XPATH, '//html').get_attribute('outerHTML'))
-            except (TimeoutException, ElementNotInteractableException):
-                break
-        return list(set(html))
+        data = {
+            'post_password': self.GRUENEBLUETE_PASSWORD,
+            'Submit': 'Senden',
+        }
+        
+        with requests.session() as s:
+            s.post(self.URL_LOGIN, data=data)
+            response = s.get(self.URL_LIST)
+        return response.content
         
 
     def getItems(self, htlm):
         items = []
-        for h in htlm:
-            soup = BeautifulSoup(h, 'html.parser')
-            list_element = soup.find_all('tr')
-            list_element.pop(0)
-            for li in list_element:
-                stock = li.find('td', {'class': 'column-in_stock'})
-                name = li.find('td', {'class': 'expand column-product'})
-                price = li.find('td', {'class': 'numdata formula column-formula_1'})
-                if stock != None and name != None and price != None:
-                    stock_str = stock.text.strip()
-                    name_str = name.text.strip().replace(',', '.')
-                    price_str = price.text.strip().replace(',', '.')
-                    if name_str != '' and price_str != '':
-                        if price_str != '0.00' and not stock_str.__contains__('Auf'):
-                            items.append({'name': name_str, 'price': price_str})
+        soup = BeautifulSoup(htlm, 'html.parser')
+        list_element = soup.find_all('tr', {'id': lambda value: value and 'table_3_row_' in value})
+        for li in list_element:
+            item_values = li.find_all('td', {'style': ''})
+            typ = item_values[0].text.strip()
+            name = item_values[1].text.strip().replace(',','.')
+            stock = item_values[8].text.strip()
+            price = item_values[9].text.strip().replace('.','')
+            if not 'Auf' in stock and typ != 'Extrakt':
+                price = price[:-2] + "." + price[-2:]
+                items.append({'name': name, 'price': price})
         return items
     
 class Cannabisapo24Apotheke(Apotheke):
-    URL_LOGIN = "https://cannabisapo24.de/account/"
+    
+    Cannabisapo24_EMAIL = config['CANNABISAPO24APOTHEKE']['USERNAME']
+    Cannabisapo24_PASSWORD = config['CANNABISAPO24APOTHEKE']['PASSWORT']
+    URL_LOGIN = "https://cannabisapo24.de/account/login"
     BESTAND_URL = 'https://cannabisapo24.de/#live-bestand-cannabis-blueten-und-extrakte'
-
+    
     def __init__(self):
         self.NAME = 'Cannabisapo24Apotheke.csv'
         self.active = config['CANNABISAPO24APOTHEKE']['ACTIVE']
 
     def getHTML(self):
-        driver = self.getDriver()
-        driver.get(self.URL_LOGIN)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        time.sleep(5)
-        driver.find_element(By.XPATH, '//*[@id="LoginCustomerEmail"]').send_keys(Cannabisapo24_EMAIL)
-        driver.find_element(By.XPATH, '//*[@id="LoginCustomerPassword"]').send_keys(Cannabisapo24_PASSWORD)
-        driver.find_element(By.XPATH, '//*[@id="customer_login"]/div[3]/label/input').click()
-        driver.find_element(By.XPATH, '//*[@id="customer_login"]/div[4]/input').click()
-        time.sleep(5)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        driver.get(self.BESTAND_URL)
-        time.sleep(5)
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        html = driver.find_element(By.XPATH, '//html').get_attribute('outerHTML')
-        return html
+        data = {
+            'form_type': 'customer_login',
+            'utf8': '✓',
+            'checkout_url': '/pages/confirm-addresses',
+            'customer[email]': self.Cannabisapo24_EMAIL,
+            'customer[password]': self.Cannabisapo24_PASSWORD,
+        }
+        with requests.session() as s:
+            s.post(self.URL_LOGIN, data=data)
+            response = s.get(self.BESTAND_URL)
+        return response.content
     
     def getItems(self, htlm):
         soup = BeautifulSoup(htlm, 'html.parser')
@@ -420,6 +296,98 @@ class Cannabisapo24Apotheke(Apotheke):
             if type == 'Blüten' and not stock.__contains__('nicht'):
                 items.append({'name': product_name, 'price': price_str})
         return items
+    
+class CannaliveryApotheke(Apotheke):
+
+    CannaliveryApotheke_USERNAME = config['CANNALIVERYAPOTHEKE']['USERNAME']
+    CannaliveryApotheke_PASSWORD = config['CANNALIVERYAPOTHEKE']['PASSWORT']
+    URL_LOGIN = "https://www.cannalivery.com/de/mein-konto/"
+    URL_PRICES = "https://www.cannalivery.com/de/live-bestand/"
+
+    def __init__(self):
+        self.NAME = 'CannaliveryApotheke.csv'
+        self.active = config['CANNALIVERYAPOTHEKE']['ACTIVE']
+
+    def getHTML(self):
+        data = {
+            'username': self.CannaliveryApotheke_USERNAME,
+            'password': self.CannaliveryApotheke_PASSWORD,
+            'woocommerce-login-nonce': '81b9224a98',
+            '_wp_http_referer': '/de/mein-konto/',
+            'login': 'Anmelden',
+        }
+
+        with requests.session() as s:
+            s.post(self.URL_LOGIN, data=data)
+            response = s.get(self.URL_PRICES)
+        return str(response.content)
+    def getItems(self, htlm):
+        items = []
+        soup = BeautifulSoup(htlm, 'html.parser')
+        list_element = soup.find_all('tr', {'data-wcpt-variation-id': lambda value: value})
+        for element in list_element:
+            price = element.get('\\ndata-wcpt-price')
+            name = element.find('a').text.strip().replace(',','.')
+            stock = element.get('\\ndata-wcpt-stock')
+            if float(stock) > 0.00:
+                items.append({'name': name, 'price': price})
+        return items
+    
+class JirooApotheke(Apotheke):
+
+    JirooApotheke_USERNAME = config['JIROOAPOTHEKE']['USERNAME']
+    JirooApotheke_PASSWORD = config['JIROOAPOTHEKE']['PASSWORT']
+    URL_LOGIN = "https://jiroo.de/"
+    URL_PRICES = "https://jiroo.de/cannabis-preise/"
+
+    def __init__(self):
+        self.NAME = 'JirooApotheke.csv'
+        self.active = config['JIROOAPOTHEKE']['ACTIVE']
+
+    def getHTML(self):
+        data = {
+            'username': self.JirooApotheke_USERNAME,
+            'password': self.JirooApotheke_PASSWORD,
+            'woocommerce-login-nonce': '20cb387ccb',
+            '_wp_http_referer': '/',
+            'login': 'Anmelden',
+        }
+        headers = {
+            'authority': 'jiroo.de',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'accept-language': 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7',
+            'cache-control': 'max-age=0',
+            'content-type': 'application/x-www-form-urlencoded',
+            'origin': 'https://jiroo.de',
+            'referer': 'https://jiroo.de/',
+            'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-user': '?1',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+        }
+        with requests.session() as s:
+            s.post(self.URL_LOGIN, data=data, headers=headers)
+            response = s.get(self.URL_PRICES, headers=headers)
+        return response.content
+
+    def getItems(self, htlm):
+        items = []
+        soup = BeautifulSoup(htlm, 'html.parser')
+        list_elementents = soup.find('tbody')
+        list_element = list_elementents.find_all('tr')
+        for element in list_element:
+            name = element.find('a').text.strip().replace(',','.')
+            price = element.find_all('td')[4].text.strip().replace(',','.').replace('€','').strip()
+            if name != '' and price != '':
+                items.append({'name': name, 'price': price})
+        return items
+
+    
 
 
 class Scrape():
@@ -432,6 +400,8 @@ class Scrape():
         apotheken_list.append(CannflosApotheke())
         apotheken_list.append(GrueneblueteApotheke())
         apotheken_list.append(Cannabisapo24Apotheke())
+        apotheken_list.append(CannaliveryApotheke())
+        apotheken_list.append(JirooApotheke())
         self.apotheken = apotheken_list
     
     def getApotheken(self):
