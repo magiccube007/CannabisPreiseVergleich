@@ -129,7 +129,12 @@ async def addUser(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text('Bitte /help schreiben für eine Liste aller Befehle!')
         return
     if len(context.args) != 1:
-        await update.message.reply_text('Probier es mal mit /help !', parse_mode=constants.ParseMode.HTML)
+        response = ''
+        if len(context.args) == 0:
+            response = '<b>Allowed Users: </b>\n' + str(updater.App.get_allowed_users())
+        else:
+            response = 'Probier es mal mit /help !'
+        await update.message.reply_text(response, parse_mode=constants.ParseMode.HTML)
     else:
         user_id = str(context.args[0])
         updater.App.add_new_user(user_id)
@@ -162,8 +167,14 @@ async def getLoaded(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(anzahl, parse_mode=constants.ParseMode.HTML)
 
 async def getLeftToMatch(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    result = app_price.getLeftToMatch()
-    await sendMessage(update,result)
+    if not str(update.message.from_user.id) == ADMIN_ID: 
+        await update.message.reply_text('Bitte /help schreiben für eine Liste aller Befehle!')
+        return
+    if len(context.args) != 0:
+        await update.message.reply_text('Probier es mal mit /help !', parse_mode=constants.ParseMode.HTML)
+    else:
+        result = app_price.getLeftToMatch()
+        await sendMessage(update,result)
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {update} caused error {context.error}')
