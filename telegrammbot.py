@@ -20,8 +20,10 @@ async def controlAccess(update):
         return True
     await update.message.reply_text('<b>Bitte erst Registrieren!\nUSER_ID:</b> '+ user_id, constants.ParseMode.HTML)
     return False
+
 #/help
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/help')
     if not await controlAccess(update): return 
     result = ('<b>Hier ist eine Liste an Befehlen:</b>\n'
                                     + '/help: Gibt diesen Text aus\n'
@@ -64,6 +66,7 @@ async def sendMessage(update,message):
         await update.message.reply_text(part,parse_mode=constants.ParseMode.HTML)
 #/search query
 async def search(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/search')
     if not await controlAccess(update): return
     result = ''
     if len(context.args) != 0:
@@ -77,12 +80,14 @@ async def search(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 #/getAllStrains
 async def getAllStrains(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/getAllStrains')
     if not await controlAccess(update): return
     result = app_price.getAllStrains()
     await sendMessage(update,result)
 
 #/getBelow certain value
 async def getBelow(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/getBelow')
     if not await controlAccess(update): return
     if len(context.args) != 1:
         await update.message.reply_text('Probier es mal mit /help !', parse_mode=constants.ParseMode.HTML)
@@ -99,6 +104,7 @@ async def getBelow(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 #/getPrices index1 index2 ...
 async def getPrices(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/getPrices')
     if not await controlAccess(update): return
     result = ''
     if len(context.args) != 0:
@@ -114,6 +120,7 @@ async def getPrices(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 #/updatePrices
 async def updatePrices(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/updatePrices')
     if not str(update.message.from_user.id) == ADMIN_ID: 
         await update.message.reply_text('Bitte /help schreiben für eine Liste aller Befehle!')
         return
@@ -125,6 +132,7 @@ async def updatePrices(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 #addUser to have Access
 async def addUser(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/addUser')
     if not str(update.message.from_user.id) == ADMIN_ID: 
         await update.message.reply_text('Bitte /help schreiben für eine Liste aller Befehle!')
         return
@@ -143,6 +151,7 @@ async def addUser(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 #getBestDeal
 async def getBestDeal(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/getBestDeal')
     if not await controlAccess(update): return
     result = 'Probier es mal mit /help !'
     if len(context.args) == 2:
@@ -161,12 +170,14 @@ def getAmountAndIndexList(value):
         return {'amount': amount, 'index_list': numbers}
     except (ValueError, IndexError):
         return {}
-#getBestDeal
+#getLoaded
 async def getLoaded(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/getLoaded')
     anzahl = app_price.getAmountInDatabase()
     await update.message.reply_text(anzahl, parse_mode=constants.ParseMode.HTML)
 
 async def getLeftToMatch(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print('USER-ID:', update.message.from_user.id , 'COMMAND:', '/getLeftToMatch')
     if not str(update.message.from_user.id) == ADMIN_ID: 
         await update.message.reply_text('Bitte /help schreiben für eine Liste aller Befehle!')
         return
