@@ -1,6 +1,5 @@
 beautifulsoup4
 configparser
-regex
-selenium
+requests
 pandas
 python-telegram-bot
